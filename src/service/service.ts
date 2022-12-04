@@ -1,7 +1,7 @@
 import axios from "axios";
 import type {AxiosRequestConfig, AxiosInstance, AxiosResponse} from 'axios'
-
 const BaseUrl = import.meta.env.VITE_APP_BASE_URL
+import vvLocal from '../utils/localStorge'
 
 interface VVRequestInterceptors<T = AxiosResponse> {
   requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
@@ -62,21 +62,18 @@ const vvRequst = new VvRequest({
   baseURL: BaseUrl,
   interceptors: {
     requestInterceptor(config) {
-      const token = '2345'
-      console.log('请求拦截成功1', config);
-      config.headers!.Authorization = `token ${token}`
+      if (vvLocal.getLocal('TOKEN')) {
+        config.headers!.Authorization = `Bearer ${vvLocal.getLocal('TOKEN')}`
+      }
       return config
     },
     requestInterceptorCatch(error) {
-      console.log('请求拦截失败1');
       return error
     },
     responseInterceptor(response) {
-      console.log('响应拦截成功1', response);
-      return response
+      return response.data
     },
     responseInterceptorCatch(error) {
-      console.log('响应拦截失败1');
       return error
     }
   }

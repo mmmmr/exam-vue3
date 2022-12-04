@@ -24,6 +24,10 @@
           <phoneForm ref="phoneFormRef"/>
         </el-tab-pane>
       </el-tabs>
+      <el-checkbox-group v-model="aotuLogin">
+        <el-checkbox label="记住密码" name="remeber" />
+        <el-checkbox label="自动登录" name="autuLogin" />
+      </el-checkbox-group>
       <el-button type="primary" size="large" @click="handleSubmit">登录</el-button>
     </div>
   </div>
@@ -39,12 +43,13 @@ const activeName = ref('user_password')
 function handleClick(tab:TabsPaneContext,event: Event){
 }
 
+const aotuLogin = ref(['记住密码','自动登录'])
+
 const passwordFormRef = ref()
 const phoneFormRef = ref()
 function handleSubmit() {
   if (activeName.value === 'user_password') {
-    console.log(passwordFormRef.value);
-    passwordFormRef.value?.submit()
+    passwordFormRef.value?.submit(aotuLogin.value)
     return
   }
   phoneFormRef.value?.submit()
@@ -67,6 +72,11 @@ function handleSubmit() {
 
 /deep/ .el-button{
   width: 100%;
+}
+
+/deep/ .el-checkbox-group{
+  display: flex;
+    justify-content: space-between;
 }
 
 </style>

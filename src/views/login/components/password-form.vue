@@ -12,10 +12,12 @@
 <script lang="ts" setup name="password-form">
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
+import { userInfoStore } from '../../../stores/user/user'
+import vvLocal from '../../../utils/localStorge'
 
 const form = reactive({
-  name:'',
-  password:''
+  name: vvLocal.getLocal('name') ?? '',
+  password: vvLocal.getLocal('password') ?? ''
 })
 
 const rules = reactive<FormRules>({
@@ -36,10 +38,16 @@ const rules = reactive<FormRules>({
 })
 
 const formRef = ref<FormInstance>()
-
-const submit = async () =>{
+const userInfo = userInfoStore()
+const submit = async (aotuLogin:[string]) =>{
   await formRef.value?.validate()
-  console.log(form);
+  aotuLogin.map( it =>{
+    if(it === '记住密码') {
+      vvLocal.setLocal('name', form.name)
+      vvLocal.setLocal('password', form.password)
+    }
+  })
+  userInfo.login(form)
 }
 
 defineExpose({
